@@ -3,10 +3,10 @@ version: "3.7"
 services:
   laravel:
     image: yaraku/assignment:$COMPOSE_PROJECT_NAME
-    container_name: $COMPOSE_PROJECT_NAME-laravel
+    container_name: laravel
     environment:
-      DB_DATABASE: laravel
-      DB_HOST: mysql
+      DB_DATABASE: project
+      DB_HOST: database
       DB_PASSWORD: secret
       DB_USERNAME: laravel
       APP_DEBUG: 'true'
@@ -18,13 +18,13 @@ services:
     volumes:
     - ./src:/var/www/html
 
-  mysql:
+  database:
     image: mysql:8
-    container_name: $COMPOSE_PROJECT_NAME-mysql
+    container_name: database
     ports:
     - '3306:3306'
     environment:
       MYSQL_USER: laravel
       MYSQL_PASSWORD: secret
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: project
+      MYSQL_ROOT_PASSWORD: root

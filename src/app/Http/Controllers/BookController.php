@@ -6,7 +6,11 @@ use App\Models\Book;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use League\Csv\CannotInsertRecord;
+use League\Csv\Writer;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BookController extends Controller
 {
@@ -38,6 +42,11 @@ class BookController extends Controller
                 'status' => 500,
                 'log' => false
             ],
+            6 => [
+                'message' => 'Could not export to CSV',
+                'status' => 500,
+                'log' => true
+            ],
         ];
 
         if ($log = $errorMessages[$errorType]['log']) {
@@ -51,6 +60,17 @@ class BookController extends Controller
         return response()->json([
             'message' => $errorMessages[$errorType]['message']
         ], $errorMessages[$errorType]['status']);
+    }
+
+    private function errorCatcher(Writer $csv, array $parameter): void
+    {
+        try {
+            $csv->insertOne($parameter);
+            return;
+        } catch (CannotInsertRecord $e) {
+            $this->handleErrorResponse(6, 'exportCSV', $e->getMessage());
+            return;
+        }
     }
 
     public function all(): JsonResponse
@@ -109,5 +129,41 @@ class BookController extends Controller
             'message' => 'Book author has been updated',
             'data' => $book
         ], 200);
+    }
+
+    public function exportToCSV(Request $request): BinaryFileResponse
+    {
+        $format = $request->get('format', 'both');
+
+        $books = Book::all(['title', 'author']);
+
+        $csv = Writer::createFromString('');
+
+        switch ($format) {
+            case 'titles':
+                $this->errorCatcher($csv, ['Title']);
+                foreach ($books as $book) {
+                    $this->errorCatcher($csv, [$book->title]);
+                }
+                break;
+            case 'authors':
+                $this->errorCatcher($csv, ['Author']);
+                foreach ($books as $book) {
+                    $this->errorCatcher($csv, [$book->author]);
+                }
+                break;
+            default:
+                $this->errorCatcher($csv, ['Title', 'Author']);
+                foreach ($books as $book) {
+                    $this->errorCatcher($csv, [$book->title, $book->author]);
+                }
+                break;
+        }
+
+        $filename = 'export_' . now()->format('YmdHis') . '.csv';
+
+        Storage::disk('local')->put($filename, $csv->getContent());
+
+        return response()->download(storage_path("app/$filename"), $filename, ['Content-Type' => 'text/csv'])->deleteFileAfterSend();
     }
 }

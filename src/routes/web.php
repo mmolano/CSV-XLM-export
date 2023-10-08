@@ -24,3 +24,6 @@ Route::prefix('book')->group(function () {
     Route::put('/{id}', [BookController::class, 'update'])->name('book.update');
     Route::delete('/{id}', [BookController::class, 'destroy'])->name('book.delete');
 });
+
+Route::get('/book/export/csv', [BookController::class, 'exportToCSV'])->name('book.csv');
+Route::get('/book/export/xml', [BookController::class, 'exportToXML'])->name('book.xml');

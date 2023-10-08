@@ -35,6 +35,11 @@ abstract class TestCase extends BaseTestCase
         return $this->put($url, $params);
     }
 
+    public function deleteBook(string $url): TestResponse
+    {
+        return $this->delete($url);
+    }
+
     public function setBook(array $data = [])
     {
         $data = array_replace_recursive([

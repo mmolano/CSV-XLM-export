@@ -12,7 +12,7 @@ class BookTest extends TestCase
     use WithoutMiddleware;
 
     /*
-     * ----- GET & POST /book -----
+     * ----- GET & POST /book methods -----
      */
     /**
      * @test
@@ -30,12 +30,10 @@ class BookTest extends TestCase
      */
     public function getBookWithOneBookInDb()
     {
-        $params = [
+        $book = $this->setBook([
             'title' => 'Indiana Jones',
             'author' => 'Rodrigo Juarez'
-        ];
-
-        $book = $this->setBook($params);
+        ]);
 
         $response = $this->getBook('/book')
             ->assertSuccessful();
@@ -52,24 +50,18 @@ class BookTest extends TestCase
      */
     public function getBookWithMultipleBooksInDb()
     {
-        $params1 = [
+        $book1 = $this->setBook([
             'title' => 'Indiana Jones',
             'author' => 'Rodrigo Juarez'
-        ];
-
-        $params2 = [
+        ]);
+        $book2 = $this->setBook([
             'title' => 'Harry Potter',
             'author' => 'Ketty Jones'
-        ];
-
-        $params3 = [
+        ]);
+        $book3 = $this->setBook([
             'title' => 'Ted',
             'author' => 'Henry Klein'
-        ];
-
-        $book1 = $this->setBook($params1);
-        $book2 = $this->setBook($params2);
-        $book3 = $this->setBook($params3);
+        ]);
 
         $response = $this->getBook('/book')
             ->assertSuccessful();
@@ -101,7 +93,7 @@ class BookTest extends TestCase
         $response = $this->putBook('/book/9999')
             ->assertStatus(400);
 
-        $this->assertEquals('Could not find the book', $response->json()['message']);
+        $this->assertEquals('Could not find the requested book', $response->json()['message']);
     }
 
     /**
@@ -114,11 +106,11 @@ class BookTest extends TestCase
             'author' => 'Rodrigo Juarez'
         ]);
 
-        $response = $this->putBook('/book/'.$book['data']['id'], [
+        $response = $this->putBook('/book/' . $book['data']['id'], [
             'author' => 1
         ]);
 
-        $this->assertEquals('Could not validate request', $response->json()['message']);
+        $this->assertEquals('The request could not be validated', $response->json()['message']);
     }
 
     /**
@@ -131,13 +123,140 @@ class BookTest extends TestCase
             'author' => 'Georges Ram'
         ]);
 
-        $this->putBook('/book/'.$book['data']['id'], [
+        $newParams = [
             'author' => 'John Leon'
-        ]);
+        ];
+
+        $this->putBook('/book/' . $book['data']['id'], $newParams);
 
         $updated = $this->getBook('/book')
             ->assertSuccessful();
 
         $this->assertEquals($book['data']['id'], $updated->json()[0]['id']);
+        $this->assertEquals($newParams['author'], $updated->json()[0]['author']);
+    }
+
+    /**
+     * @test
+     */
+    public function putBookWithGoodParamsAndMultipleBooks()
+    {
+        $book = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+        $book2 = $this->setBook([
+            'title' => 'Peppa',
+            'author' => 'Gregory Liam'
+        ]);
+        $book3 = $this->setBook([
+            'title' => 'Razer',
+            'author' => 'Erica Malory'
+        ]);
+
+        $newParams = [
+            'author' => 'John Leon'
+        ];
+
+        $this->putBook('/book/' . $book2['data']['id'], $newParams);
+
+        $updated = $this->getBook('/book')
+            ->assertSuccessful();
+
+        $this->assertEquals($book['data']['id'], $updated->json()[0]['id']);
+        $this->assertEquals($book['data']['author'], $updated->json()[0]['author']);
+
+        $this->assertEquals($book2['data']['id'], $updated->json()[1]['id']);
+        $this->assertEquals($newParams['author'], $updated->json()[1]['author']);
+
+        $this->assertEquals($book3['data']['id'], $updated->json()[2]['id']);
+        $this->assertEquals($book3['data']['author'], $updated->json()[2]['author']);
+    }
+
+    /*
+     * ----- Route DELETE /book -----
+     */
+    /**
+     * @test
+     */
+    public function deleteBookWithInvalidId()
+    {
+        $book = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+
+        $response = $this->deleteBook('/book/999');
+
+
+        $this->assertEquals('Could not find the requested book', $response->json()['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteBookWithGoodId()
+    {
+        $book = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+
+        $bookExist = $this->getBook('/book')
+            ->assertSuccessful();
+
+        $this->assertCount(1, $bookExist->json());
+
+        $response = $this->deleteBook('/book/' . $book['data']['id'])
+            ->assertSuccessful();
+
+        $bookDeleted = $this->getBook('/book')
+            ->assertSuccessful();
+
+        $this->assertCount(0, $bookDeleted->json());
+
+        $this->assertEquals('The book has been deleted', $response->json()['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteBookWithMultipleBooks()
+    {
+        $book = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+
+        $book2 = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+
+        $book3 = $this->setBook([
+            'title' => 'Adventure Time',
+            'author' => 'Georges Ram'
+        ]);
+
+        $bookExist = $this->getBook('/book')
+            ->assertSuccessful();
+
+        $this->assertCount(3, $bookExist->json());
+
+        $response = $this->deleteBook('/book/' . $book2['data']['id'])
+            ->assertSuccessful();
+
+        $bookDeleted = $this->getBook('/book')
+            ->assertSuccessful();
+
+        $this->assertCount(2, $bookDeleted->json());
+
+        $this->assertEquals('The book has been deleted', $response->json()['message']);
+
+        $this->assertEquals($book['data']['id'], $bookDeleted->json()[0]['id']);
+        $this->assertEquals($book['data']['author'], $bookDeleted->json()[0]['author']);
+
+        $this->assertEquals($book3['data']['id'], $bookDeleted->json()[1]['id']);
+        $this->assertEquals($book3['data']['author'], $bookDeleted->json()[1]['author']);
     }
 }

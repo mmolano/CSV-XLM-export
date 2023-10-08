@@ -10,6 +10,49 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
+    private function handleErrorResponse(int $errorType, string $functionType, string $logMessage = ''): JsonResponse
+    {
+        $errorMessages = [
+            1 => [
+                'message' => 'The request could not be validated',
+                'status' => 400,
+                'log' => true
+            ],
+            2 => [
+                'message' => 'Could not add a new book',
+                'status' => 500,
+                'log' => false
+            ],
+            3 => [
+                'message' => 'Could not find the requested book',
+                'status' => 400,
+                'log' => true
+            ],
+            4 => [
+                'message' => 'Could not delete the requested book',
+                'status' => 500,
+                'log' => false
+            ],
+            5 => [
+                'message' => 'Could not update the requested book',
+                'status' => 500,
+                'log' => false
+            ],
+        ];
+
+        if ($log = $errorMessages[$errorType]['log']) {
+            Log::error($log, [
+                'path' => class_basename(self::class),
+                'func' => $functionType,
+                'message' => $logMessage,
+            ]);
+        }
+
+        return response()->json([
+            'message' => $errorMessages[$errorType]['message']
+        ], $errorMessages[$errorType]['status']);
+    }
+
     public function all(): JsonResponse
     {
         return response()
@@ -24,22 +67,13 @@ class BookController extends Controller
         ]);
 
         if ($validation->fails()) {
-            Log::error('Could not validate request', [
-                'path' => class_basename(self::class),
-                'func' => 'store',
-                'message' => json_encode($validation->errors())
-            ]);
-            return response()->json([
-                'message' => 'Could not validate request'
-            ], 400);
+            return $this->handleErrorResponse(1, 'store', json_encode($validation->errors()));
         } else if (!$book = Book::create($request->only(['title', 'author']))) {
-            return response()->json([
-                'message' => 'Error while trying to add a new book'
-            ], 400);
+            return $this->handleErrorResponse(2, 'store');
         }
 
         return response()->json([
-            'message' => 'Book added',
+            'message' => 'A new book has been added',
             'data' => $book
         ], 200);
     }
@@ -47,18 +81,9 @@ class BookController extends Controller
     public function destroy(Request $request): JsonResponse
     {
         if (!$book = Book::where('id', $request->id)->first()) {
-            Log::error('Could not find the book', [
-                'path' => class_basename(self::class),
-                'func' => 'destroy',
-                'message' => 'The book with id: '. $request->id . ' could not be find'
-            ]);
-            return response()->json([
-                'message' => 'Could not find the book'
-            ], 400);
+            return $this->handleErrorResponse(3, 'destroy', 'The book with id: ' . $request->id . ' could not be find');
         } else if (!$book->delete()) {
-            return response()->json([
-                'message' => 'Could not delete the book'
-            ], 400);
+            return $this->handleErrorResponse(4, 'destroy');
         }
 
         return response()->json([
@@ -73,22 +98,11 @@ class BookController extends Controller
         ]);
 
         if ($validation->fails()) {
-            Log::error('Could not validate request', [
-                'path' => class_basename(self::class),
-                'func' => 'update',
-                'message' => json_encode($validation->errors())
-            ]);
-            return response()->json([
-                'message' => 'Could not validate request'
-            ], 400);
+            return $this->handleErrorResponse(1, 'update', json_encode($validation->errors()));
         } else if (!$book = Book::where('id', $request->id)->first()) {
-            return response()->json([
-                'message' => 'Could not find the book'
-            ], 400);
+            return $this->handleErrorResponse(3, 'update', 'The book with id: ' . $request->id . ' could not be find');
         } else if (!$book->update($request->only('author'))) {
-            return response()->json([
-                'message' => 'Could not update author'
-            ], 400);
+            return $this->handleErrorResponse(5, 'update');
         };
 
         return response()->json([

@@ -28,7 +28,7 @@ export default function CreateBook({ onBookAdded, toastOptions, url }) {
             setTitle("");
             setAuthor("");
 
-            const response = await axios.post(url + `/book`, formData);
+            const response = await axios.post(`${url}/book`, formData);
 
             onBookAdded();
             toast.success(response.data.message, toastOptions);

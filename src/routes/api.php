@@ -25,3 +25,4 @@ Route::prefix('book')->group(function () {
     Route::patch('/{id}', [BookController::class, 'update'])->name('book.update');
     Route::delete('/{id}', [BookController::class, 'destroy'])->name('book.delete');
 });
+

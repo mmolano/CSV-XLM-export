@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\BookController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,5 +19,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('/book/export/csv', [BookController::class, 'exportToCSV'])->name('book.csv');
-Route::get('/book/export/xml', [BookController::class, 'exportToXML'])->name('book.xml');
+Route::get('/export/{type}/{format}', [ExportController::class, 'export'])->name('book.export');

@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { ToastContainer, toast } from "react-toastify";
 import CreateBook from "../components/CreateBook";
 import List from "../components/List";
+import ExportSelection from "../components/ExportSelection";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -63,6 +64,7 @@ export default function Home() {
                 toastOptions={toastOptions}
                 url={apiUrl}
             />
+            <ExportSelection url={apiUrl} />
         </>
     );
 }

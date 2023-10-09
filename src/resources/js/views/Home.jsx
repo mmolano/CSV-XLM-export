@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import List from "../components/List";
-import { StrictMode } from "react";
-import CreateBook from "../components/CreateBook";
 import axios from "axios";
+import React, { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ToastContainer, toast } from "react-toastify";
+import CreateBook from "../components/CreateBook";
+import List from "../components/List";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,6 +11,7 @@ export default function Home() {
     const apiUrl = process.env.MIX_APP_URL;
 
     const [books, setBooks] = useState([]);
+    const [pagination, setPagination] = useState([]);
 
     const toastOptions = {
         position: "top-right",
@@ -31,8 +31,10 @@ export default function Home() {
     const refreshBooks = async () => {
         toast.loading("Loading data...", { toastId: "loading" });
         try {
-            await axios.get(apiUrl + `/book`).then(({ data }) => {
-                setBooks(data);
+            await axios.get(`${apiUrl}/book`).then(({ data }) => {
+                const { data: booksData, ...paginationData } = data;
+                setBooks(booksData);
+                setPagination(paginationData);
                 toast.update("loading", {
                     render: "Data has been updated",
                     type: "success",
@@ -44,7 +46,6 @@ export default function Home() {
             });
         } catch (error) {
             toast.error("Error: Could not fetch books", toastOptions);
-            console.error("Error fetching books:", error);
         }
     };
 
@@ -55,11 +56,16 @@ export default function Home() {
                 toastOptions={toastOptions}
                 url={apiUrl}
             />
-            ;
-            <List onBookDelete={() => refreshBooks()} books={books} toastOptions={toastOptions} url={apiUrl} />;
+            <List
+                onBookUpdate={() => refreshBooks()}
+                books={books}
+                pagination={pagination}
+                toastOptions={toastOptions}
+                url={apiUrl}
+            />
         </>
     );
-};
+}
 
 const container = document.getElementById("home");
 const root = createRoot(container);

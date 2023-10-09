@@ -22,7 +22,7 @@ class BookTest extends TestCase
         $response = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertEmpty($response->json());
+        $this->assertEmpty($response->json()['data']);
     }
 
     /**
@@ -38,11 +38,11 @@ class BookTest extends TestCase
         $response = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(1, $response->json());
+        $this->assertCount(1, $response->json()["data"]);
 
-        $this->assertEquals($book['data']['id'], $response->json()[0]['id']);
-        $this->assertEquals($book['data']['title'], $response->json()[0]['title']);
-        $this->assertEquals($book['data']['author'], $response->json()[0]['author']);
+        $this->assertEquals($book['data']['id'], $response->json()["data"][0]['id']);
+        $this->assertEquals($book['data']['title'], $response->json()["data"][0]['title']);
+        $this->assertEquals($book['data']['author'], $response->json()["data"][0]['author']);
     }
 
     /**
@@ -66,19 +66,19 @@ class BookTest extends TestCase
         $response = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(3, $response->json());
+        $this->assertCount(3, $response->json()["data"]);
 
-        $this->assertEquals($book1['data']['id'], $response->json()[0]['id']);
-        $this->assertEquals($book1['data']['title'], $response->json()[0]['title']);
-        $this->assertEquals($book1['data']['author'], $response->json()[0]['author']);
+        $this->assertEquals($book1['data']['id'], $response->json()["data"][0]['id']);
+        $this->assertEquals($book1['data']['title'], $response->json()["data"][0]['title']);
+        $this->assertEquals($book1['data']['author'], $response->json()["data"][0]['author']);
 
-        $this->assertEquals($book2['data']['id'], $response->json()[1]['id']);
-        $this->assertEquals($book2['data']['title'], $response->json()[1]['title']);
-        $this->assertEquals($book2['data']['author'], $response->json()[1]['author']);
+        $this->assertEquals($book2['data']['id'], $response->json()["data"][1]['id']);
+        $this->assertEquals($book2['data']['title'], $response->json()["data"][1]['title']);
+        $this->assertEquals($book2['data']['author'], $response->json()["data"][1]['author']);
 
-        $this->assertEquals($book3['data']['id'], $response->json()[2]['id']);
-        $this->assertEquals($book3['data']['title'], $response->json()[2]['title']);
-        $this->assertEquals($book3['data']['author'], $response->json()[2]['author']);
+        $this->assertEquals($book3['data']['id'], $response->json()["data"][2]['id']);
+        $this->assertEquals($book3['data']['title'], $response->json()["data"][2]['title']);
+        $this->assertEquals($book3['data']['author'], $response->json()["data"][2]['author']);
     }
 
     /*
@@ -132,8 +132,8 @@ class BookTest extends TestCase
         $updated = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertEquals($book['data']['id'], $updated->json()[0]['id']);
-        $this->assertEquals($newParams['author'], $updated->json()[0]['author']);
+        $this->assertEquals($book['data']['id'], $updated->json()["data"][0]['id']);
+        $this->assertEquals($newParams['author'], $updated->json()["data"][0]['author']);
     }
 
     /**
@@ -163,14 +163,14 @@ class BookTest extends TestCase
         $updated = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertEquals($book['data']['id'], $updated->json()[0]['id']);
-        $this->assertEquals($book['data']['author'], $updated->json()[0]['author']);
+        $this->assertEquals($book['data']['id'], $updated->json()["data"][0]['id']);
+        $this->assertEquals($book['data']['author'], $updated->json()["data"][0]['author']);
 
-        $this->assertEquals($book2['data']['id'], $updated->json()[1]['id']);
-        $this->assertEquals($newParams['author'], $updated->json()[1]['author']);
+        $this->assertEquals($book2['data']['id'], $updated->json()["data"][1]['id']);
+        $this->assertEquals($newParams['author'], $updated->json()["data"][1]['author']);
 
-        $this->assertEquals($book3['data']['id'], $updated->json()[2]['id']);
-        $this->assertEquals($book3['data']['author'], $updated->json()[2]['author']);
+        $this->assertEquals($book3['data']['id'], $updated->json()["data"][2]['id']);
+        $this->assertEquals($book3['data']['author'], $updated->json()["data"][2]['author']);
     }
 
     /*
@@ -205,7 +205,7 @@ class BookTest extends TestCase
         $bookExist = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(1, $bookExist->json());
+        $this->assertCount(1, $bookExist->json()["data"]);
 
         $response = $this->deleteBook('/book/' . $book['data']['id'])
             ->assertSuccessful();
@@ -213,7 +213,7 @@ class BookTest extends TestCase
         $bookDeleted = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(0, $bookDeleted->json());
+        $this->assertCount(0, $bookDeleted->json()["data"]);
 
         $this->assertEquals('The book has been deleted', $response->json()['message']);
     }
@@ -241,7 +241,7 @@ class BookTest extends TestCase
         $bookExist = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(3, $bookExist->json());
+        $this->assertCount(3, $bookExist->json()["data"]);
 
         $response = $this->deleteBook('/book/' . $book2['data']['id'])
             ->assertSuccessful();
@@ -249,14 +249,14 @@ class BookTest extends TestCase
         $bookDeleted = $this->getBook('/book')
             ->assertSuccessful();
 
-        $this->assertCount(2, $bookDeleted->json());
+        $this->assertCount(2, $bookDeleted->json()["data"]);
 
         $this->assertEquals('The book has been deleted', $response->json()['message']);
 
-        $this->assertEquals($book['data']['id'], $bookDeleted->json()[0]['id']);
-        $this->assertEquals($book['data']['author'], $bookDeleted->json()[0]['author']);
+        $this->assertEquals($book['data']['id'], $bookDeleted->json()["data"][0]['id']);
+        $this->assertEquals($book['data']['author'], $bookDeleted->json()["data"][0]['author']);
 
-        $this->assertEquals($book3['data']['id'], $bookDeleted->json()[1]['id']);
-        $this->assertEquals($book3['data']['author'], $bookDeleted->json()[1]['author']);
+        $this->assertEquals($book3['data']['id'], $bookDeleted->json()["data"][1]['id']);
+        $this->assertEquals($book3['data']['author'], $bookDeleted->json()["data"][1]['author']);
     }
 }

@@ -73,10 +73,11 @@ class BookController extends Controller
         }
     }
 
+    //TODO: update tests
     public function all(): JsonResponse
     {
         return response()
-            ->json(Book::all());
+            ->json(Book::paginate(5));
     }
 
     public function store(Request $request): JsonResponse
@@ -123,7 +124,8 @@ class BookController extends Controller
             return $this->handleErrorResponse(3, 'update', 'The book with id: ' . $request->id . ' could not be find');
         } else if (!$book->update($request->only('author'))) {
             return $this->handleErrorResponse(5, 'update');
-        };
+        }
+        ;
 
         return response()->json([
             'message' => 'Book author has been updated',

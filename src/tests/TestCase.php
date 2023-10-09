@@ -32,7 +32,7 @@ abstract class TestCase extends BaseTestCase
 
     public function putBook(string $url, array $params = []): TestResponse
     {
-        return $this->put('/api'.$url, $params);
+        return $this->patch('/api'.$url, $params);
     }
 
     public function deleteBook(string $url): TestResponse

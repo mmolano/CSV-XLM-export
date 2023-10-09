@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 import { toast } from "react-toastify";
 
 export default function CreateBook({ onBookAdded, toastOptions, url }) {
@@ -29,10 +28,7 @@ export default function CreateBook({ onBookAdded, toastOptions, url }) {
             setTitle("");
             setAuthor("");
 
-            const response = await axios.post(
-                url + `/book`,
-                formData
-            );
+            const response = await axios.post(url + `/book`, formData);
 
             onBookAdded();
             toast.success(response.data.message, toastOptions);

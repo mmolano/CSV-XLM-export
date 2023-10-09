@@ -22,22 +22,22 @@ abstract class TestCase extends BaseTestCase
 
     public function getBook(string $url): TestResponse
     {
-        return $this->get($url);
+        return $this->get('/api'.$url);
     }
 
     public function postBook(string $url, array $params = []): TestResponse
     {
-        return $this->post($url, $params);
+        return $this->post('/api'.$url, $params);
     }
 
     public function putBook(string $url, array $params = []): TestResponse
     {
-        return $this->put($url, $params);
+        return $this->put('/api'.$url, $params);
     }
 
     public function deleteBook(string $url): TestResponse
     {
-        return $this->delete($url);
+        return $this->delete('/api'.$url);
     }
 
     public function setBook(array $data = [])

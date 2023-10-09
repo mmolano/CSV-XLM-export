@@ -23,7 +23,7 @@ class BookController extends Controller
                 'log' => true
             ],
             2 => [
-                'message' => 'Could not add a new book',
+                'message' => 'An error occured while adding a new book.',
                 'status' => 500,
                 'log' => false
             ],
@@ -101,7 +101,7 @@ class BookController extends Controller
     public function destroy(Request $request): JsonResponse
     {
         if (!$book = Book::where('id', $request->id)->first()) {
-            return $this->handleErrorResponse(3, 'destroy', 'The book with id: ' . $request->id . ' could not be find');
+            return $this->handleErrorResponse(3, 'destroy', 'The book with id: ' . $request->id . ' could not be found');
         } else if (!$book->delete()) {
             return $this->handleErrorResponse(4, 'destroy');
         }

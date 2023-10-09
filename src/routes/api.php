@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,11 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('book')->group(function () {
+    Route::get('/', [BookController::class, 'all'])->name('book.all');
+    Route::post('/', [BookController::class, 'store'])->name('book.post');
+    Route::put('/{id}', [BookController::class, 'update'])->name('book.update');
+    Route::delete('/{id}', [BookController::class, 'destroy'])->name('book.delete');
 });

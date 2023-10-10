@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
@@ -8,16 +8,16 @@ export default function ExportSelection({ url }) {
     const [selectionFormat, setSelectionFormat] = useState([]);
 
     const handleCheckboxChangeType = (event) => {
-       const checkboxId = event.target.id;
-       const isChecked = event.target.checked;
+        const checkboxId = event.target.id;
+        const isChecked = event.target.checked;
 
-       setSelectionType((prevSelectionType) => {
-           if (isChecked) {
-               return [...prevSelectionType, checkboxId];
-           } else {
-               return prevSelectionType.filter((id) => id !== checkboxId);
-           }
-       });
+        setSelectionType((prevSelectionType) => {
+            if (isChecked) {
+                return [...prevSelectionType, checkboxId];
+            } else {
+                return prevSelectionType.filter((id) => id !== checkboxId);
+            }
+        });
     };
 
     const handleCheckboxChangeFormat = (event) => {
@@ -33,11 +33,12 @@ export default function ExportSelection({ url }) {
         });
     };
 
-   const exportData = async (e) => {
-       // TODO: fix reset box.
-        e.preventDefault();
-        e.target.reset();
+    const handleDisable = () => {
+        return selectionType.length === 0 || selectionFormat.length === 0;
+    };
 
+    const exportData = async (e) => {
+        e.preventDefault();
         const type = selectionType.join(",");
         const format = selectionFormat.join(",");
 
@@ -47,6 +48,7 @@ export default function ExportSelection({ url }) {
 
         setSelectionType([]);
         setSelectionFormat([]);
+        e.target.reset();
     };
     return (
         <>
@@ -59,6 +61,7 @@ export default function ExportSelection({ url }) {
                             id={`title`}
                             label={`Title`}
                             onChange={handleCheckboxChangeType}
+                            checked={selectionType.includes("title")}
                         />
                     </div>
                     <div className="form-check">
@@ -67,6 +70,7 @@ export default function ExportSelection({ url }) {
                             id={`author`}
                             label={`Author`}
                             onChange={handleCheckboxChangeType}
+                            checked={selectionType.includes("author")}
                         />
                     </div>
                     <hr />
@@ -77,6 +81,7 @@ export default function ExportSelection({ url }) {
                             id={`csv`}
                             label={`CSV`}
                             onChange={handleCheckboxChangeFormat}
+                            checked={selectionFormat.includes("csv")}
                         />
                     </div>
                     <div className="form-check">
@@ -85,6 +90,7 @@ export default function ExportSelection({ url }) {
                             id={`xml`}
                             label={`XML`}
                             onChange={handleCheckboxChangeFormat}
+                            checked={selectionFormat.includes("xml")}
                         />
                     </div>
                     <Button
@@ -93,6 +99,7 @@ export default function ExportSelection({ url }) {
                         size="lg"
                         block="block"
                         type="submit"
+                        disabled={handleDisable()}
                     >
                         Download
                     </Button>

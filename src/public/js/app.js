@@ -86941,21 +86941,23 @@ function ExportSelection(_ref) {
       }
     });
   };
+  var handleDisable = function handleDisable() {
+    return selectionType.length === 0 || selectionFormat.length === 0;
+  };
   var exportData = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
       var type, format, url;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            // TODO: fix reset box.
             e.preventDefault();
-            e.target.reset();
             type = selectionType.join(",");
             format = selectionFormat.join(",");
             url = "/export/".concat(type, "/").concat(format);
             window.open(url, "_blank");
             setSelectionType([]);
             setSelectionFormat([]);
+            e.target.reset();
           case 8:
           case "end":
             return _context.stop();
@@ -86976,34 +86978,39 @@ function ExportSelection(_ref) {
     type: "checkbox",
     id: "title",
     label: "Title",
-    onChange: handleCheckboxChangeType
+    onChange: handleCheckboxChangeType,
+    checked: selectionType.includes("title")
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "form-check"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__["default"].Check, {
     type: "checkbox",
     id: "author",
     label: "Author",
-    onChange: handleCheckboxChangeType
+    onChange: handleCheckboxChangeType,
+    checked: selectionType.includes("author")
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h3", null, "Select Format"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "form-check"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__["default"].Check, {
     type: "checkbox",
     id: "csv",
     label: "CSV",
-    onChange: handleCheckboxChangeFormat
+    onChange: handleCheckboxChangeFormat,
+    checked: selectionFormat.includes("csv")
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "form-check"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__["default"].Check, {
     type: "checkbox",
     id: "xml",
     label: "XML",
-    onChange: handleCheckboxChangeFormat
+    onChange: handleCheckboxChangeFormat,
+    checked: selectionFormat.includes("xml")
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     variant: "primary",
     className: "mt-2",
     size: "lg",
     block: "block",
-    type: "submit"
+    type: "submit",
+    disabled: handleDisable()
   }, "Download"))));
 }
 

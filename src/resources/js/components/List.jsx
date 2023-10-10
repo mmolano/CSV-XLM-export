@@ -12,13 +12,31 @@ export default function List({
     onBookUpdate,
     onPageChange,
     url,
+    onSortChange,
 }) {
     const [rowId, setRowId] = useState(null);
     const [editId, setEditId] = useState(null);
+    const [sortField, setSortField] = useState(null);
+    const [sortOrder, setSortOrder] = useState(null);
     const maxDisplayedPages = pagination.per_page;
 
     const handlePageChange = (page) => {
         onPageChange(page);
+    };
+
+    const handleSort = (field) => {
+        let newSortOrder;
+
+        if (field === sortField) {
+            newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+        } else {
+            newSortOrder = "asc";
+        }
+
+        setSortField(field);
+        setSortOrder(newSortOrder);
+
+        onSortChange({ field, order: newSortOrder });
     };
 
     const removeRow = async () => {
@@ -87,8 +105,20 @@ export default function List({
                                     <table className="table table-bordered mb-0 text-center">
                                         <thead>
                                             <tr>
-                                                <th>Author</th>
-                                                <th>Title</th>
+                                                <th
+                                                    onClick={() =>
+                                                        handleSort("author")
+                                                    }
+                                                >
+                                                    Author
+                                                </th>
+                                                <th
+                                                    onClick={() =>
+                                                        handleSort("title")
+                                                    }
+                                                >
+                                                    Title
+                                                </th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>

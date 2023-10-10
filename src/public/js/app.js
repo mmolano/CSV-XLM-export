@@ -87055,7 +87055,8 @@ function List(_ref) {
     toastOptions = _ref.toastOptions,
     onBookUpdate = _ref.onBookUpdate,
     onPageChange = _ref.onPageChange,
-    url = _ref.url;
+    url = _ref.url,
+    onSortChange = _ref.onSortChange;
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
     _useState2 = _slicedToArray(_useState, 2),
     rowId = _useState2[0],
@@ -87064,9 +87065,31 @@ function List(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     editId = _useState4[0],
     setEditId = _useState4[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+    _useState6 = _slicedToArray(_useState5, 2),
+    sortField = _useState6[0],
+    setSortField = _useState6[1];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+    _useState8 = _slicedToArray(_useState7, 2),
+    sortOrder = _useState8[0],
+    setSortOrder = _useState8[1];
   var maxDisplayedPages = pagination.per_page;
   var handlePageChange = function handlePageChange(page) {
     onPageChange(page);
+  };
+  var handleSort = function handleSort(field) {
+    var newSortOrder;
+    if (field === sortField) {
+      newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    } else {
+      newSortOrder = "asc";
+    }
+    setSortField(field);
+    setSortOrder(newSortOrder);
+    onSortChange({
+      field: field,
+      order: newSortOrder
+    });
   };
   var removeRow = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -87139,7 +87162,15 @@ function List(_ref) {
     className: "table-responsive"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("table", {
     className: "table table-bordered mb-0 text-center"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Author"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Actions"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, books.map(function (row, index) {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    onClick: function onClick() {
+      return handleSort("author");
+    }
+  }, "Author"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", {
+    onClick: function onClick() {
+      return handleSort("title");
+    }
+  }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("th", null, "Actions"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tbody", null, books.map(function (row, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, row.author), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, row.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
@@ -87258,6 +87289,14 @@ function Home() {
     _useState6 = _slicedToArray(_useState5, 2),
     page = _useState6[0],
     setPage = _useState6[1];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+    _useState8 = _slicedToArray(_useState7, 2),
+    sortField = _useState8[0],
+    setSortField = _useState8[1];
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
+    _useState10 = _slicedToArray(_useState9, 2),
+    sortOrder = _useState10[0],
+    setSortOrder = _useState10[1];
   var toastOptions = {
     position: "top-right",
     autoClose: 3000,
@@ -87274,8 +87313,15 @@ function Home() {
   var handlePageChange = function handlePageChange(page) {
     setPage(page);
   };
+  var handleSortChange = function handleSortChange(_ref) {
+    var field = _ref.field,
+      order = _ref.order;
+    setSortField(field);
+    setSortOrder(order);
+    refreshBooks(page, field, order);
+  };
   var refreshBooks = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page) {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, sortField, sortOrder) {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -87284,8 +87330,14 @@ function Home() {
             });
             _context.prev = 1;
             _context.next = 4;
-            return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(apiUrl, "/book?page=").concat(page)).then(function (_ref2) {
-              var data = _ref2.data;
+            return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(apiUrl, "/book"), {
+              params: {
+                page: page,
+                sort_by: sortField,
+                sort_order: sortOrder
+              }
+            }).then(function (_ref3) {
+              var data = _ref3.data;
               var booksData = data.data,
                 paginationData = _objectWithoutProperties(data, _excluded);
               setBooks(booksData);
@@ -87312,8 +87364,8 @@ function Home() {
         }
       }, _callee, null, [[1, 6]]);
     }));
-    return function refreshBooks(_x) {
-      return _ref.apply(this, arguments);
+    return function refreshBooks(_x, _x2, _x3) {
+      return _ref2.apply(this, arguments);
     };
   }();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_CreateBook__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -87330,7 +87382,8 @@ function Home() {
     pagination: pagination,
     toastOptions: toastOptions,
     url: apiUrl,
-    onPageChange: handlePageChange
+    onPageChange: handlePageChange,
+    onSortChange: handleSortChange
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ExportSelection__WEBPACK_IMPORTED_MODULE_6__["default"], {
     url: apiUrl
   }));

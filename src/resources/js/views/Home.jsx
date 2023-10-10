@@ -14,6 +14,8 @@ export default function Home() {
     const [books, setBooks] = useState([]);
     const [pagination, setPagination] = useState([]);
     const [page, setPage] = useState(1);
+    const [sortField, setSortField] = useState(null);
+    const [sortOrder, setSortOrder] = useState(null);
 
     const toastOptions = {
         position: "top-right",
@@ -30,26 +32,40 @@ export default function Home() {
         refreshBooks(page);
     }, [page]);
 
-     const handlePageChange = (page) => {
-         setPage(page);
-     };
+    const handlePageChange = (page) => {
+        setPage(page);
+    };
 
-    const refreshBooks = async (page) => {
+    const handleSortChange = ({ field, order }) => {
+        setSortField(field);
+        setSortOrder(order);
+        refreshBooks(page, field, order);
+    };
+
+    const refreshBooks = async (page, sortField, sortOrder) => {
         toast.loading("Loading data...", { toastId: "loading" });
         try {
-            await axios.get(`${apiUrl}/book?page=${page}`).then(({ data }) => {
-                const { data: booksData, ...paginationData } = data;
-                setBooks(booksData);
-                setPagination(paginationData);
-                toast.update("loading", {
-                    render: "Data has been updated",
-                    type: "success",
-                    isLoading: false,
-                    autoClose: 2000,
-                    closeOnClick: true,
-                    theme: "light",
+            await axios
+                .get(`${apiUrl}/book`, {
+                    params: {
+                        page: page,
+                        sort_by: sortField,
+                        sort_order: sortOrder,
+                    },
+                })
+                .then(({ data }) => {
+                    const { data: booksData, ...paginationData } = data;
+                    setBooks(booksData);
+                    setPagination(paginationData);
+                    toast.update("loading", {
+                        render: "Data has been updated",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2000,
+                        closeOnClick: true,
+                        theme: "light",
+                    });
                 });
-            });
         } catch (error) {
             toast.error("Error: Could not fetch books", toastOptions);
         }
@@ -69,6 +85,7 @@ export default function Home() {
                 toastOptions={toastOptions}
                 url={apiUrl}
                 onPageChange={handlePageChange}
+                onSortChange={handleSortChange}
             />
             <ExportSelection url={apiUrl} />
         </>

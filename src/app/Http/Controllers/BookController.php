@@ -54,10 +54,34 @@ class BookController extends Controller
     }
 
     //TODO: update tests
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
-        return response()
-            ->json(Book::paginate(5));
+        $validation = Validator::make($request->all(), [
+            'sort_by' => 'string|in:author,title',
+            'sort_order' => 'string|in:asc,desc',
+        ]);
+
+        if ($validation->fails()) {
+            return $this->handleErrorResponse(1, 'all', json_encode($validation->errors()));
+        }
+
+        $query = Book::query();
+
+        if ($request->has('sort_by') && $request->has('sort_order')) {
+            $sortField = $request->input('sort_by');
+            $sortOrder = $request->input('sort_order');
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('title', 'like', '%' . $searchTerm . '%')
+                ->orWhere('author', 'like', '%' . $searchTerm . '%');
+        }
+
+        $books = $query->paginate(5);
+
+        return response()->json($books);
     }
 
     public function store(Request $request): JsonResponse

@@ -3,10 +3,11 @@ import React, { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ToastContainer, toast } from "react-toastify";
 import CreateBook from "../components/CreateBook";
-import List from "../components/List";
 import ExportSelection from "../components/ExportSelection";
+import List from "../components/List";
 
 import "react-toastify/dist/ReactToastify.css";
+import SearchBar from "../components/Elements/SearchBar";
 
 export default function Home() {
     const apiUrl = process.env.MIX_APP_URL;
@@ -16,6 +17,7 @@ export default function Home() {
     const [page, setPage] = useState(1);
     const [sortField, setSortField] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const toastOptions = {
         position: "top-right",
@@ -42,7 +44,12 @@ export default function Home() {
         refreshBooks(page, field, order);
     };
 
-    const refreshBooks = async (page, sortField, sortOrder) => {
+    const handleSearchChange = (searchQuery) => {
+        setSearchQuery(searchQuery);
+        refreshBooks(page, sortField, sortOrder, searchQuery);
+    };
+
+    const refreshBooks = async (page, sortField, sortOrder, searchQuery) => {
         toast.loading("Loading data...", { toastId: "loading" });
         try {
             await axios
@@ -51,6 +58,7 @@ export default function Home() {
                         page: page,
                         sort_by: sortField,
                         sort_order: sortOrder,
+                        search: searchQuery 
                     },
                 })
                 .then(({ data }) => {
@@ -78,6 +86,7 @@ export default function Home() {
                 toastOptions={toastOptions}
                 url={apiUrl}
             />
+            <SearchBar onSearchSubmit={handleSearchChange} />
             <List
                 onBookUpdate={() => refreshBooks(page)}
                 books={books}

@@ -10941,3 +10941,7 @@ button:disabled:hover {
   background-color: #d0cfcf;
 }
 
+.sortable-th:hover {
+  cursor: pointer;
+}
+

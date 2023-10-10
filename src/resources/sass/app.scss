@@ -17,3 +17,9 @@ button:disabled {
       background-color: #d0cfcf;
    }
 }
+
+.sortable-th {
+   &:hover {
+      cursor: pointer;
+   }
+}

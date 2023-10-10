@@ -10931,3 +10931,13 @@ a.text-dark:focus {
   }
 }
 
+button:disabled {
+  background-color: #d0cfcf;
+  opacity: 0.5;
+}
+
+button:disabled:hover {
+  opacity: 0.5;
+  background-color: #d0cfcf;
+}
+

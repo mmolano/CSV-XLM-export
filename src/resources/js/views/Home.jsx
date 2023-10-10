@@ -13,6 +13,7 @@ export default function Home() {
 
     const [books, setBooks] = useState([]);
     const [pagination, setPagination] = useState([]);
+    const [page, setPage] = useState(1);
 
     const toastOptions = {
         position: "top-right",
@@ -26,13 +27,17 @@ export default function Home() {
     };
 
     useEffect(() => {
-        refreshBooks();
-    }, []);
+        refreshBooks(page);
+    }, [page]);
 
-    const refreshBooks = async () => {
+     const handlePageChange = (page) => {
+         setPage(page);
+     };
+
+    const refreshBooks = async (page) => {
         toast.loading("Loading data...", { toastId: "loading" });
         try {
-            await axios.get(`${apiUrl}/book`).then(({ data }) => {
+            await axios.get(`${apiUrl}/book?page=${page}`).then(({ data }) => {
                 const { data: booksData, ...paginationData } = data;
                 setBooks(booksData);
                 setPagination(paginationData);
@@ -53,16 +58,17 @@ export default function Home() {
     return (
         <>
             <CreateBook
-                onBookAdded={() => refreshBooks()}
+                onBookAdded={() => refreshBooks(page)}
                 toastOptions={toastOptions}
                 url={apiUrl}
             />
             <List
-                onBookUpdate={() => refreshBooks()}
+                onBookUpdate={() => refreshBooks(page)}
                 books={books}
                 pagination={pagination}
                 toastOptions={toastOptions}
                 url={apiUrl}
+                onPageChange={handlePageChange}
             />
             <ExportSelection url={apiUrl} />
         </>

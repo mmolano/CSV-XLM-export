@@ -87054,6 +87054,7 @@ function List(_ref) {
     pagination = _ref.pagination,
     toastOptions = _ref.toastOptions,
     onBookUpdate = _ref.onBookUpdate,
+    onPageChange = _ref.onPageChange,
     url = _ref.url;
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
     _useState2 = _slicedToArray(_useState, 2),
@@ -87063,6 +87064,10 @@ function List(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     editId = _useState4[0],
     setEditId = _useState4[1];
+  var maxDisplayedPages = pagination.per_page;
+  var handlePageChange = function handlePageChange(page) {
+    onPageChange(page);
+  };
   var removeRow = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -87091,6 +87096,18 @@ function List(_ref) {
       return _ref2.apply(this, arguments);
     };
   }();
+  var calculatePageRange = function calculatePageRange() {
+    var startPage = Math.max(1, pagination.current_page - Math.floor(maxDisplayedPages / 2));
+    var endPage = Math.min(pagination.last_page, startPage + maxDisplayedPages - 1);
+    if (endPage - startPage + 1 < maxDisplayedPages) {
+      startPage = Math.max(1, endPage - maxDisplayedPages + 1);
+    }
+    return Array.from({
+      length: endPage - startPage + 1
+    }, function (_, index) {
+      return startPage + index;
+    });
+  };
   function removeSelectedId() {
     setRowId(null);
   }
@@ -87112,7 +87129,7 @@ function List(_ref) {
     className: "container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h2", {
     className: "mt-2 text-center"
-  }, "Available books: ", pagination.total), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h5", null, "Showing ", books.length, " books"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+  }, "Available books: ", pagination.total ? pagination.total : 0, " ", "and ", pagination.last_page ? pagination.last_page : 0, " pages"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h5", null, "Showing ", books.length, " books"), books.length === 0 ? "No books found" : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "col-12"
@@ -87126,21 +87143,61 @@ function List(_ref) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("tr", {
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, row.author), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, row.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-      className: "btn btn-success me-2",
+      className: "btn btn-success me-2 m-1",
       "data-toggle": "modal",
       "data-target": "#editModal",
       onClick: function onClick() {
         return setEditId(row.id);
       }
     }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-      className: "btn btn-danger me-2",
+      className: "btn btn-danger me-2 m-1",
       "data-toggle": "modal",
       "data-target": "#deleteModal",
       onClick: function onClick() {
         return setRowId(row.id);
       }
     }, "Delete")));
-  })))))))));
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("nav", {
+    className: "mt-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("ul", {
+    className: "pagination justify-content-center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+    className: "page-item"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+    className: "page-link ".concat(pagination.current_page === 1 ? "disabled" : ""),
+    "aria-label": "Previous",
+    disabled: pagination.current_page === 1,
+    onClick: function onClick() {
+      return handlePageChange(pagination.current_page === 1 ? pagination.current_page : pagination.current_page - 1);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    "aria-hidden": "true"
+  }, "\xAB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Previous"))), calculatePageRange().map(function (page) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+      key: page,
+      className: "page-item ".concat(page === pagination.current_page ? "active" : "")
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+      className: "page-link",
+      onClick: function onClick() {
+        return handlePageChange(page);
+      }
+    }, page));
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("li", {
+    className: "page-item"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+    className: "page-link",
+    "aria-label": "Next",
+    disabled: pagination.current_page === pagination.last_page,
+    onClick: function onClick() {
+      return handlePageChange(pagination.last_page === pagination.current_page ? pagination.current_page : pagination.current_page + 1);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    "aria-hidden": "true"
+  }, "\xBB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    className: "sr-only"
+  }, "Next"))))))))));
 }
 
 /***/ }),
@@ -87197,6 +87254,10 @@ function Home() {
     _useState4 = _slicedToArray(_useState3, 2),
     pagination = _useState4[0],
     setPagination = _useState4[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
+    _useState6 = _slicedToArray(_useState5, 2),
+    page = _useState6[0],
+    setPage = _useState6[1];
   var toastOptions = {
     position: "top-right",
     autoClose: 3000,
@@ -87208,10 +87269,13 @@ function Home() {
     theme: "light"
   };
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    refreshBooks();
-  }, []);
+    refreshBooks(page);
+  }, [page]);
+  var handlePageChange = function handlePageChange(page) {
+    setPage(page);
+  };
   var refreshBooks = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page) {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -87220,7 +87284,7 @@ function Home() {
             });
             _context.prev = 1;
             _context.next = 4;
-            return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(apiUrl, "/book")).then(function (_ref2) {
+            return axios__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(apiUrl, "/book?page=").concat(page)).then(function (_ref2) {
               var data = _ref2.data;
               var booksData = data.data,
                 paginationData = _objectWithoutProperties(data, _excluded);
@@ -87248,24 +87312,25 @@ function Home() {
         }
       }, _callee, null, [[1, 6]]);
     }));
-    return function refreshBooks() {
+    return function refreshBooks(_x) {
       return _ref.apply(this, arguments);
     };
   }();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_CreateBook__WEBPACK_IMPORTED_MODULE_4__["default"], {
     onBookAdded: function onBookAdded() {
-      return refreshBooks();
+      return refreshBooks(page);
     },
     toastOptions: toastOptions,
     url: apiUrl
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_List__WEBPACK_IMPORTED_MODULE_5__["default"], {
     onBookUpdate: function onBookUpdate() {
-      return refreshBooks();
+      return refreshBooks(page);
     },
     books: books,
     pagination: pagination,
     toastOptions: toastOptions,
-    url: apiUrl
+    url: apiUrl,
+    onPageChange: handlePageChange
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_ExportSelection__WEBPACK_IMPORTED_MODULE_6__["default"], {
     url: apiUrl
   }));

@@ -8,7 +8,7 @@ export default function SearchBar({onSearchSubmit}) {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault(); 
         onSearchSubmit(searchQuery);
     };
     return (

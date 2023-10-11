@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export default function ExportSelection({ url }) {
+export default function ExportBooks({ url }) {
     const [selectionType, setSelectionType] = useState([]);
     const [selectionFormat, setSelectionFormat] = useState([]);
 

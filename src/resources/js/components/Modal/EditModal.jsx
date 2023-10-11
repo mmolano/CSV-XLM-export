@@ -1,12 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { toast } from "react-toastify";
+import { useBookContext } from "../../context/context";
 
-export default function EditModal({ id, url, toastOptions, hasUpdate }) {
+export default function EditModal({ url, toastOptions, hasUpdate }) {
+    const {
+        state: { rowEditId: id },
+    } = useBookContext();
     const [author, setAuthor] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 

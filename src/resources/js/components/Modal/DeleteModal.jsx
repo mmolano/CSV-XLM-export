@@ -1,12 +1,14 @@
 import React from "react";
+import { useBookContext } from "../../context/context";
 
-export default function DeleteModal({ onConfirmDelete, onCancel, title }) {
-    function removeRow() {
+export default function DeleteModal({ onConfirmDelete }) {
+    const {
+        state: { rowDeleteId: id },
+        dispatch,
+    } = useBookContext();
+
+    function deleteRow() {
         onConfirmDelete();
-    }
-
-    function cancel() {
-        onCancel();
     }
 
     return (
@@ -34,22 +36,33 @@ export default function DeleteModal({ onConfirmDelete, onCancel, title }) {
                         </button>
                     </div>
                     <div className="modal-body">
-                        Would you like to delete this entry?
+                        Would you like to delete this book?
                     </div>
                     <div className="modal-footer">
                         <button
                             type="button"
-                            className="btn btn-secondary"
+                            className="btn btn-primary"
                             data-dismiss="modal"
-                            onClick={() => cancel()}
+                            onClick={() =>
+                                dispatch({
+                                    type: "SET_ROW_DELETE_ID",
+                                    payload: null,
+                                })
+                            }
                         >
                             Close
                         </button>
                         <button
                             type="button"
-                            className="btn btn-primary"
+                            className="btn btn-danger"
                             data-dismiss="modal"
-                            onClick={() => removeRow()}
+                            onClick={() => {
+                                dispatch({
+                                    type: "SET_ROW_DELETE_ID",
+                                    payload: id,
+                                });
+                                onConfirmDelete();
+                            }}
                         >
                             Delete
                         </button>

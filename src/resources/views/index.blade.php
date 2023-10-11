@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div id="home">
+    <div id="_app">
     </div>
 </body>
 

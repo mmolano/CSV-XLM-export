@@ -19,7 +19,7 @@ class BookController extends Controller
                 'log' => true
             ],
             2 => [
-                'message' => 'An error occured while adding a new book.',
+                'message' => 'An error occurred while adding a new book.',
                 'status' => 500,
                 'log' => false
             ],
@@ -53,12 +53,12 @@ class BookController extends Controller
         ], $errorMessages[$errorType]['status']);
     }
 
-    //TODO: update tests
     public function all(Request $request): JsonResponse
     {
         $validation = Validator::make($request->all(), [
-            'sort_by' => 'string|in:author,title',
-            'sort_order' => 'string|in:asc,desc',
+            'sort_by' => 'nullable|string|in:author,title',
+            'sort_order' => 'nullable|string|in:asc,desc',
+            'search' => 'nullable|string'
         ]);
 
         if ($validation->fails()) {
@@ -67,13 +67,13 @@ class BookController extends Controller
 
         $query = Book::query();
 
-        if ($request->has('sort_by') && $request->has('sort_order')) {
+        if (($request->has('sort_by') && $request->filled('sort_by')) && ($request->has('sort_order') && $request->filled('sort_order'))) {
             $sortField = $request->input('sort_by');
             $sortOrder = $request->input('sort_order');
             $query->orderBy($sortField, $sortOrder);
         }
 
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where('title', 'like', '%' . $searchTerm . '%')
                 ->orWhere('author', 'like', '%' . $searchTerm . '%');
@@ -128,14 +128,11 @@ class BookController extends Controller
             return $this->handleErrorResponse(3, 'update', 'The book with id: ' . $request->id . ' could not be find');
         } else if (!$book->update($request->only('author'))) {
             return $this->handleErrorResponse(5, 'update');
-        }
-        ;
+        };
 
         return response()->json([
             'message' => 'Book author has been updated',
             'data' => $book
         ], 200);
     }
-
-    
 }

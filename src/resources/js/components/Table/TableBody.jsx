@@ -9,15 +9,15 @@ export default function TableBody({ books, sortField, sortOrder, handleSort }) {
                     <tr>
                         <th
                             className="sortable-th"
-                            onClick={() => handleSort("author")}
-                        >
-                            Author&nbsp;
-                        </th>
-                        <th
-                            className="sortable-th"
                             onClick={() => handleSort("title")}
                         >
                             Title&nbsp;
+                        </th>
+                        <th
+                            className="sortable-th"
+                            onClick={() => handleSort("author")}
+                        >
+                            Author&nbsp;
                         </th>
                         <th>Actions</th>
                     </tr>
@@ -27,12 +27,12 @@ export default function TableBody({ books, sortField, sortOrder, handleSort }) {
                         <TableItem
                             key={index}
                             id={row.id}
-                            author={row.author}
                             title={row.title}
+                            author={row.author}
                         />
                     ))}
                 </tbody>
             </table>
         </div>
     );
-}; 
+};

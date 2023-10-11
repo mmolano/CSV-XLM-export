@@ -1,13 +1,13 @@
 import React from "react";
 import { useBookContext } from "../../context/context";
 
-export default function TableItem({ id, author, title }) {
+export default function TableItem({ id, title, author }) {
     const { dispatch } = useBookContext();
 
     return (
         <tr>
-            <td>{author}</td>
             <td>{title}</td>
+            <td>{author}</td>
             <td>
                 <button
                     className="btn btn-success me-2 m-1"
@@ -32,4 +32,4 @@ export default function TableItem({ id, author, title }) {
             </td>
         </tr>
     );
-}; 
+};

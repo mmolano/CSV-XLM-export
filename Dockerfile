@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install \
         pdo_mysql \
+        pdo_sqlite \
         zip
 
 ENV APACHE_DOCUMENT_ROOT $LARAVEL_PATH/public

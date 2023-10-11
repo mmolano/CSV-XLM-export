@@ -125,7 +125,7 @@ class BookController extends Controller
         if ($validation->fails()) {
             return $this->handleErrorResponse(1, 'update', json_encode($validation->errors()));
         } else if (!$book = Book::where('id', $request->id)->first()) {
-            return $this->handleErrorResponse(3, 'update', 'The book with id: ' . $request->id . ' could not be find');
+            return $this->handleErrorResponse(3, 'update', 'The book with id: ' . $request->id . ' could not be found');
         } else if (!$book->update($request->only('author'))) {
             return $this->handleErrorResponse(5, 'update');
         };

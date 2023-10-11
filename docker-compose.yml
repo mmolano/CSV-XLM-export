@@ -12,19 +12,32 @@ services:
       APP_DEBUG: 'true'
       APP_ENV: local
       APP_KEY: ayGbuqVXJakHHvMTZCjKqzhVqMNsHMQs
-      LOG_CHANNEL: stderr
+      LOG_CHANNEL: stack
     ports:
-    - '80:80'
+      - '80:80'
     volumes:
-    - ./src:/var/www/html
+      - ./src:/var/www/html
 
   database:
     image: mysql:8
     container_name: database
     ports:
-    - '3306:3306'
+      - '3306:3306'
     environment:
       MYSQL_USER: laravel
       MYSQL_PASSWORD: secret
       MYSQL_DATABASE: project
       MYSQL_ROOT_PASSWORD: root
+
+  laravel_testing:
+    image: yaraku/assignment:$COMPOSE_PROJECT_NAME
+    container_name: laravel_testing
+    environment:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      APP_ENV: testing
+      APP_DEBUG: 'true'
+      APP_KEY: knDDuRW1tXT0p2vXUIJCRbKMjUZ5
+      LOG_CHANNEL: stack
+    volumes:
+      - ./src:/var/www/html

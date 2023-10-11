@@ -24,7 +24,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        refreshBooks(page);
+        refreshBooks(page, sortField, sortOrder, searchQuery);
     }, [page]);
 
     const handleSortChange = ({ field, order }) => {
@@ -37,7 +37,7 @@ export default function Home() {
 
     const handleSearchChange = (searchQuery) => {
         dispatch({ type: "SET_SEARCH_QUERY", payload: searchQuery });
-        refreshBooks(page, sortField, sortOrder, searchQuery);
+        refreshBooks(1, sortField, sortOrder, searchQuery);
     };
 
     const refreshBooks = async (page, sortField, sortOrder, searchQuery) => {
@@ -78,14 +78,14 @@ export default function Home() {
                 toastOptions={toastOptions}
                 onBookAdded={() => refreshBooks(page)}
             />
-            <SearchBar onSearchSubmit={handleSearchChange} />
+            <SearchBar onSearchSubmit={handleSearchChange}/>
             <TableBooks
                 url={apiUrl}
                 toastOptions={toastOptions}
                 onBookUpdate={() => refreshBooks(page)}
                 onSortChange={handleSortChange}
             />
-            <ExportBooks url={apiUrl} />
+            <ExportBooks/>
         </>
     );
 }

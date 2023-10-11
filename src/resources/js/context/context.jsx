@@ -8,8 +8,8 @@ const initialState = {
     page: 1,
     rowEditId: null,
     rowDeleteId: null,
-    sortField: null,
-    sortOrder: null,
+    sortField: "",
+    sortOrder: "",
     searchQuery: "",
 };
 

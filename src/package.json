@@ -23,7 +23,8 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
-        "vue-template-compiler": "^2.7.14"
+        "vue-template-compiler": "^2.7.14",
+        "terser-webpack-plugin": "^v1.2.2"
     },
     "dependencies": {
         "axios": "^1.5.1",

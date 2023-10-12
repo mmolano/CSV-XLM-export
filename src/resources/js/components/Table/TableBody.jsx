@@ -3,7 +3,7 @@ import TableItem from "./TableItem";
 
 export default function TableBody({ books, sortField, sortOrder, handleSort }) {
     return (
-        <div className="table-responsive">
+        <div data-id="cy-table-body" className="table-responsive">
             <table className="table table-bordered mb-0 text-center">
                 <thead>
                     <tr>
@@ -35,4 +35,4 @@ export default function TableBody({ books, sortField, sortOrder, handleSort }) {
             </table>
         </div>
     );
-};
+}

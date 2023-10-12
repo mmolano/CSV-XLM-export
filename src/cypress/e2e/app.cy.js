@@ -1,8 +1,10 @@
 // check commands.js for unrecognized functions
+const targetUrl = Cypress.env('CYPRESS_TARGET_URL');
+
 describe('User experience testing | Data behaviour', () => {
     it('Visits the website and get error on DB fetch', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { statusCode: 400 }).as('fail');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@fail').then(() => {
             cy.get('#cy-error-get-books', { timeout: 10000 }).should('have.contain', 'Error: Could not fetch books');
@@ -12,7 +14,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and verifies UI components (SearchBar, TableBooks, ExportBooks) for an empty DB', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'emptyDatabase.json' }).as('emptyDB');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@emptyDB').then(() => {
             cy.checkComponentsNotVisible();
@@ -21,7 +23,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and verifies UI components with data', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -35,7 +37,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and delete one user', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -75,7 +77,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and update one user', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -121,7 +123,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and add one user', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -164,7 +166,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and search for title or author', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=Title+1', { fixture: 'afterSearch.json' }).as('getBooksAfterSearch');
@@ -188,7 +190,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and extract to CSV', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -211,7 +213,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and extract to XML', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
@@ -234,7 +236,7 @@ describe('User experience testing | Data behaviour', () => {
 
     it('Visits the website and extract to CSV & XML', () => {
         cy.intercept('GET', '/api/book?page=1&sort_by=&sort_order=&search=', { fixture: 'filledDatabase.json' }).as('getBooks');
-        cy.visit('http://localhost');
+        cy.visit(targetUrl);
 
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();

@@ -10,7 +10,7 @@ import SearchBar from "../components/Search/SearchBar";
 export default function Home() {
     const apiUrl = process.env.MIX_APP_URL;
     const { state, dispatch } = useBookContext();
-    const { page, sortField, sortOrder, searchQuery } = state;
+    const { page, sortField, sortOrder, searchQuery, books } = state;
 
     const toastOptions = {
         position: "top-right",
@@ -78,14 +78,19 @@ export default function Home() {
                 toastOptions={toastOptions}
                 onBookAdded={() => refreshBooks(page)}
             />
-            <SearchBar onSearchSubmit={handleSearchChange}/>
+            {
+                books.length === 0 ? (searchQuery ? <SearchBar onSearchSubmit={handleSearchChange}/> : null) :
+                    <SearchBar onSearchSubmit={handleSearchChange}/>
+            }
             <TableBooks
                 url={apiUrl}
                 toastOptions={toastOptions}
                 onBookUpdate={() => refreshBooks(page)}
                 onSortChange={handleSortChange}
             />
-            <ExportBooks/>
+            {
+                books.length === 0 ? null : <ExportBooks/>
+            }
         </>
     );
 }

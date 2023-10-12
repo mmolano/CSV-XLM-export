@@ -3,7 +3,7 @@
 <table>
 <tr>
 <td>
-  This application is an CSV/XML extractor project using Laravel 6 and react 18.
+  This application is a CSV/XML extractor project using Laravel 6 and react 18.
 </td>
 </tr>
 </table>
@@ -66,6 +66,9 @@ $ docker-compose up -d
 
 # Access the bash of the container (testing) - to leave type: "exit"
 $ docker exec -it laravel_testing bash
+
+# make sure that the APP_ENV in .env.testing is set to testing
+$ APP_ENV=testing
 
 # Start the tests
 $ ./vendor/bin/phpunit

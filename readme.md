@@ -20,6 +20,8 @@
 - Axios: https://axios-http.com/docs/intro
 - react-toastify: https://fkhadra.github.io/react-toastify/introduction/
 - laravel-formatter: https://github.com/SoapBox/laravel-formatter
+- Cypress: https://www.cypress.io/
+
 
 ## Docker setup
 
@@ -109,6 +111,9 @@ $ npm run dev
 
 # Hot reload dev
 $ npm run watch
+
+# Cypress tests
+$ npx cypress open
 ```
 
 <h6 style="color: red">Production environment : </h6>
@@ -117,3 +122,10 @@ $ npm run watch
 # Launch production mode
 $ npm run prod
 ```
+## Cypress
+
+<>To target html elements with cypress create a "data-id" with a value that follows the following naming: "cy-name-you-want". <br>
+Example: &nbsp; `<input data-id="cy-title-name"/>`
+</p>
+
+<p>Depending on the app url, the specified url set in cypress must be changed. "http://localhost" is default one.</p>

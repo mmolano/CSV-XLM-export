@@ -26,26 +26,39 @@
 ## Docker setup
 
 <h6 style="color:red">Note :</h6>
-<p>Make sure that there is no other containers or services using the following ports: <b style="color: red">80</b>, <b style="color: red">3306</b>. Otherwise, you can change the ports in the .env file and the docker-compose file before executing the next commands : </p>
+<p>Make sure that there is no other containers or services using the following ports: <b style="color: red">80</b>, <b style="color: red">3306</b>. Otherwise, you can change the ports in the .env file and the docker-compose file before executing the following commands : </p>
 
 ```bash
 
 # Must be in the root folder
 $ docker-compose up -d
 
+# Install the npm container (it might take some time)
+$ docker-compose exec npm npm install 
+
+# Enter the container
+$ docker exec -it npm bash
+
+# Setup npm in dev or production mode
+$ npm run dev | npm run prod
+
 # Access the bash of the container (non-testing) - to leave type: "exit"
 $ docker exec -it laravel bash  
 
-# Change this value in .env with your host (laravel folder)
-$ MIX_APP_URL=
-
 # Install dependencies
 $ composer install
+
+# Generate key
+$ php artisan key:generate
 
 # Once inside the bash
 $ php artisan migrate
 # If an error is returned, the DB is not running yet, check status and try again
 # (check with docker ps)
+
+# Change this value in .env with your host (laravel folder). Must end with "/api"
+$ MIX_APP_URL=
+
 ```
 
 <p>The app can be accessed through: <a href="http://localhost/">http://localhost/</a></p>
@@ -69,8 +82,10 @@ $ docker-compose up -d
 # Access the bash of the container (testing) - to leave type: "exit"
 $ docker exec -it laravel_testing bash
 
-# make sure that the APP_ENV in .env.testing is set to testing
+# Make sure that the following values are the same in .env.testing
 $ APP_ENV=testing
+$ DB_CONNECTION=sqlite
+$ DB_DATABASE=:memory:
 
 # Start the tests
 $ ./vendor/bin/phpunit
@@ -85,17 +100,28 @@ $ cd /src
 # Get env file
 $ cp .env.example .env
 
-# Generate key
-$ php artisan key:generate
-
-# Change this value in .env (laravel folder) with your host
-$ MIX_APP_URL=
-
 # Install dependencies
 $ composer install
 
+# Generate key
+$ php artisan key:generate
+
 # Once inside the bash
 $ php artisan migrate
+
+# Change this value in .env with your host (laravel folder). Must end with "/api"
+$ MIX_APP_URL=
+
+# Tests can be run the same way: 
+
+# Make sure that the following values are the same in .env.testing
+$ APP_ENV=testing
+$ DB_CONNECTION=sqlite
+$ DB_DATABASE=:memory:
+
+# Start the tests
+$ ./vendor/bin/phpunit
+
 ```
 
 ## Front setup
@@ -124,8 +150,7 @@ $ npm run prod
 ```
 ## Cypress
 
-<>To target html elements with cypress create a "data-id" with a value that follows the following naming: "cy-name-you-want". <br>
+To target html elements with cypress create a "data-id" with a value that follows the following naming: "cy-name-you-want". <br>
 Example: &nbsp; `<input data-id="cy-title-name"/>`
-</p>
 
-<p>Depending on the app url, the specified url set in cypress must be changed. "http://localhost" is default one.</p>
+<p>Depending on the base url of your application you might have to change the env url inside the <b>cypress.env.json</b> -> "CYPRESS_TARGET_URL"</p>

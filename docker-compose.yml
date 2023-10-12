@@ -41,3 +41,13 @@ services:
       LOG_CHANNEL: stack
     volumes:
       - ./src:/var/www/html
+
+  npm:  
+      image: node:14
+      container_name: npm
+      working_dir: /var/www/html
+      volumes: 
+        - ./src:/var/www/html
+      stdin_open: true  # Keep STDIN open so the container doesn't exit
+      tty: true         # Allocate a pseudo-TTY
+      command: tail -f /dev/null  # Keep the container running

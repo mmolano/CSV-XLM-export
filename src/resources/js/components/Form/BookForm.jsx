@@ -15,7 +15,7 @@ export default function BookForm({
         <Form onSubmit={onSubmit}>
             <Row>
                 <Col>
-                    <Form.Group controlId="Name">
+                    <Form.Group controlId="titleAdd">
                         <Form.Label>Title</Form.Label>
                         <Form.Control
                             type="text"
@@ -27,7 +27,7 @@ export default function BookForm({
             </Row>
             <Row className="my-3">
                 <Col>
-                    <Form.Group controlId="Description">
+                    <Form.Group controlId="authorAdd">
                         <Form.Label>Author</Form.Label>
                         <Form.Control
                             type="text"
@@ -38,6 +38,7 @@ export default function BookForm({
                 </Col>
             </Row>
             <Button
+                id="cy-add-button"
                 variant="primary"
                 className="mt-2"
                 size="lg"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function SearchBar({onSearchSubmit}) {
+export default function SearchBar({ onSearchSubmit }) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleSearchChange = (event) => {
@@ -8,11 +8,11 @@ export default function SearchBar({onSearchSubmit}) {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         onSearchSubmit(searchQuery);
     };
     return (
-        <div className="container mt-5">
+        <div data-id="cy-search" className="container mt-5">
             <form className="form-inline my-2 my-lg-0" onSubmit={handleSubmit}>
                 <input
                     className="form-control mr-sm-2"

@@ -62,4 +62,4 @@ export default function TablePagination({ pagination, handlePageChange }) {
             </ul>
         </nav>
     );
-}; 
+}

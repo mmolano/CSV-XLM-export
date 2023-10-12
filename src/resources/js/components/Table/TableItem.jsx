@@ -5,9 +5,9 @@ export default function TableItem({ id, title, author }) {
     const { dispatch } = useBookContext();
 
     return (
-        <tr>
-            <td>{title}</td>
-            <td>{author}</td>
+        <tr data-id={`cy-table-row-${id}`}>
+            <td data-id={`cy-table-item-title-${id}`}>{title}</td>
+            <td data-id={`cy-table-item-author-${id}`}>{author}</td>
             <td>
                 <button
                     className="btn btn-success me-2 m-1"
@@ -32,4 +32,4 @@ export default function TableItem({ id, title, author }) {
             </td>
         </tr>
     );
-};
+}

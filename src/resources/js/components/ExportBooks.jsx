@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useBookContext } from "../context/context";
@@ -7,7 +6,9 @@ import { useBookContext } from "../context/context";
 export default function ExportBooks() {
     const [selectionType, setSelectionType] = useState([]);
     const [selectionFormat, setSelectionFormat] = useState([]);
-    const { state: { searchQuery, sortOrder, sortField } } = useBookContext();
+    const {
+        state: { searchQuery, sortOrder, sortField },
+    } = useBookContext();
 
     const handleCheckboxChangeType = (event) => {
         const checkboxId = event.target.id;
@@ -54,7 +55,7 @@ export default function ExportBooks() {
     };
     return (
         <>
-            <div className="container mt-5">
+            <div data-id="cy-export" className="container mt-5">
                 <Form onSubmit={exportData}>
                     <h3>Select data to extract</h3>
                     <div className="form-check">
@@ -75,7 +76,7 @@ export default function ExportBooks() {
                             checked={selectionType.includes("author")}
                         />
                     </div>
-                    <hr/>
+                    <hr />
                     <h3>Select Format</h3>
                     <div className="form-check">
                         <Form.Check

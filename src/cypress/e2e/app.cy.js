@@ -82,7 +82,7 @@ describe('User experience testing | Data behaviour', () => {
         cy.wait('@getBooks').then(() => {
             cy.checkComponentsVisible();
 
-            cy.intercept('POST', '/api/book/2', {
+            cy.intercept('PATCH', '/api/book/2', {
                 statusCode: 200,
                 body: {
                     message: 'Book author has been updated'

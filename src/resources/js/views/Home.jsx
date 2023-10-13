@@ -1,10 +1,10 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import CreateBook from "../components/CreateBook";
 import ExportBooks from "../components/ExportBooks";
 import SearchBar from "../components/Search/SearchBar";
 import TableBooks from "../components/TableBooks";
+import { getAllBooks } from "../store/axiosCalls";
 import { useBookContext } from "../context/context";
 
 export default function Home() {
@@ -43,28 +43,27 @@ export default function Home() {
     const refreshBooks = async (page, sortField, sortOrder, searchQuery) => {
         toast.loading("Loading data...", { toastId: "loading" });
         try {
-            const response = await axios.get(`${apiUrl}/book`, {
-                params: {
-                    page: page,
-                    sort_by: sortField,
-                    sort_order: sortOrder,
-                    search: searchQuery,
-                },
-            });
+            await getAllBooks(
+                apiUrl,
+                page,
+                sortField,
+                sortOrder,
+                searchQuery
+            ).then((response) => {
+                const { data } = response;
+                const { data: booksData, ...paginationData } = data;
 
-            const { data } = response;
-            const { data: booksData, ...paginationData } = data;
+                dispatch({ type: "SET_BOOKS", payload: booksData });
+                dispatch({ type: "SET_PAGINATION", payload: paginationData });
 
-            dispatch({ type: "SET_BOOKS", payload: booksData });
-            dispatch({ type: "SET_PAGINATION", payload: paginationData });
-
-            toast.update("loading", {
-                render: "Data has been updated",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                closeOnClick: true,
-                theme: "light",
+                toast.update("loading", {
+                    render: "Data has been updated",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 2000,
+                    closeOnClick: true,
+                    theme: "light",
+                });
             });
         } catch (error) {
             toast.error("Error: Could not fetch books", {

@@ -1,10 +1,10 @@
-import axios from "axios";
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { toast } from "react-toastify";
+import { updateBook } from "../../store/axiosCalls";
 import { useBookContext } from "../../context/context";
 
 export default function EditModal({ url, toastOptions, hasUpdate }) {
@@ -14,32 +14,30 @@ export default function EditModal({ url, toastOptions, hasUpdate }) {
     const [author, setAuthor] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    function handleDisable() {
+    const handleDisable = () => {
         return !author || isSubmitting;
-    }
+    };
 
-    const updateBook = async (e) => {
+    const update = async (e) => {
         e.preventDefault();
         if (!author || isSubmitting) return;
+
         setIsSubmitting(true);
 
-        const formData = new FormData();
-        formData.append("_method", "PATCH");
-        formData.append("author", author);
+        try {
+            const formData = new FormData();
+            formData.append("author", author);
 
-        await axios
-            .post(`${url}/book/${id}`, formData)
-            .then(({ data }) => {
-                toast.success(data.message, toastOptions);
-            })
-            .catch(({ response }) => {
-                toast.error(response.error, toastOptions);
-            })
-            .finally(() => {
-                setAuthor("");
-                hasUpdate();
-                setIsSubmitting(false);
+            await updateBook(id, url, formData).then((response) => {
+                toast.success(response.message, toastOptions);
             });
+        } catch (error) {
+            toast.error(error.message, toastOptions);
+        } finally {
+            setAuthor("");
+            hasUpdate();
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -67,7 +65,7 @@ export default function EditModal({ url, toastOptions, hasUpdate }) {
                         </button>
                     </div>
                     <div className="modal-body">
-                        <Form onSubmit={updateBook}>
+                        <Form onSubmit={update}>
                             <Row>
                                 <Col>
                                     <Form.Group controlId="Name">

@@ -3,7 +3,9 @@
 <table>
 <tr>
 <td>
-  This application is a CSV/XML extractor project using Laravel 6 and react 18.
+  This application is a CSV/XML extractor project using Laravel 6 and react 18. 
+  
+  It uses a bearer token to access the backend so be sure to incorporate the default token for testing purposes: "replaceWithRealToken". The token will be generated and accessible if the database is seeded. 
 </td>
 </tr>
 </table>
@@ -22,11 +24,15 @@
 - laravel-formatter: https://github.com/SoapBox/laravel-formatter
 - Cypress: https://www.cypress.io/
 
+## Pre-requiring
+- "php": "^7.2",
+- "node": "v20.3.1" -> working
+- "npm": "9.6.7" -> working
 
 ## Docker setup
 
 <h6 style="color:red">Note :</h6>
-<p>Make sure that there is no other containers or services using the following ports: <b style="color: red">80</b>, <b style="color: red">3306</b>. Otherwise, you can change the ports in the .env file and the docker-compose file before executing the following commands : </p>
+<p>Make sure that there is no other container or service using the following ports: <b style="color: red">80</b>, <b style="color: red">3306</b>. Otherwise, you might need to change the ports in the .env file and the docker-compose file before executing the following commands : </p>
 
 ```bash
 
@@ -58,6 +64,9 @@ $ php artisan migrate
 
 # Change this value in .env with your host (laravel folder). Must end with "/api"
 $ MIX_APP_URL=
+
+# If the DB is seeded, this token will work (default bearer token). Put it in .env
+$ MIX_APP_TOKEN="replaceWithRealToken"
 
 ```
 
@@ -93,6 +102,8 @@ $ ./vendor/bin/phpunit
 
 ## Non-docker setup
 
+<p>You must create a database and link it to the .env file</p>
+
 ```bash
 # Get inside the correct folder
 $ cd /src
@@ -111,6 +122,9 @@ $ php artisan migrate
 
 # Change this value in .env with your host (laravel folder). Must end with "/api"
 $ MIX_APP_URL=
+
+# If the DB is seeded, this token will work (default bearer token). Put it in .env
+$ MIX_APP_TOKEN="replaceWithRealToken"
 
 # Tests can be run the same way: 
 

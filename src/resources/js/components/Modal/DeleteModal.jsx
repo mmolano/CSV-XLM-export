@@ -1,25 +1,22 @@
-import axios from "axios";
 import React from "react";
 import { toast } from "react-toastify";
+import { deleteBook } from "../../store/axiosCalls";
 import { useBookContext } from "../../context/context";
-
+ 
 export default function DeleteModal({ url, toastOptions, hasUpdate }) {
     const {
         state: { rowDeleteId: id },
         dispatch,
     } = useBookContext();
 
-    const deleteBook = async () => {
-        if (id) {
-            await axios
-                .delete(`${url}/book/${id}`)
-                .then(({ data }) => {
-                    toast.success(data.message, toastOptions);
-                    hasUpdate();
-                })
-                .catch(({ response }) => {
-                    toast.error(response.data.message, toastOptions);
-                });
+    const deleteContent = async () => {
+        try {
+            await deleteBook(id, url).then((response) => {
+                toast.success(response.message, toastOptions);
+                hasUpdate();
+            });
+        } catch (error) {
+            toast.error(error.message, toastOptions);
         }
     };
 
@@ -68,7 +65,7 @@ export default function DeleteModal({ url, toastOptions, hasUpdate }) {
                             type="button"
                             className="btn btn-danger"
                             data-dismiss="modal"
-                            onClick={deleteBook}
+                            onClick={deleteContent}
                         >
                             Delete
                         </button>

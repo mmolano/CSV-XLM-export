@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { createBook } from "../store/axiosCalls";
 import BookForm from "./Form/BookForm";
 
 export default function CreateBook({ url, toastOptions, onBookAdded }) {
@@ -30,19 +30,12 @@ export default function CreateBook({ url, toastOptions, onBookAdded }) {
             setTitle("");
             setAuthor("");
 
-            const response = await axios.post(`${url}/book`, formData);
-
-            onBookAdded();
-            toast.success(response.data.message, toastOptions);
+            await createBook(url, formData).then((response) => {
+                toast.success(response.data.message, toastOptions);
+                onBookAdded();
+            });
         } catch (error) {
-            if (error.status === 500) {
-                toast.error(error.data.message, toastOptions);
-            } else {
-                toast.error(
-                    "An error occurred while adding a new book, please contact the administrator",
-                    toastOptions
-                );
-            }
+            toast.error(error.message, toastOptions);
         } finally {
             setIsSubmitting(false);
         }

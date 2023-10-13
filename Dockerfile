@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install \
         pdo_mysql \
+        pdo_sqlite \
         zip
 
 ENV APACHE_DOCUMENT_ROOT $LARAVEL_PATH/public
@@ -36,5 +37,11 @@ RUN pecl install xdebug-2.9.2 \
 COPY --from=composer $LARAVEL_PATH $LARAVEL_PATH
 
 RUN chown -R www-data $LARAVEL_PATH/storage
+
+RUN apt-get install -y \
+    curl \
+    gnupg \
+    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && apt-get install -y nodejs
 
 WORKDIR $LARAVEL_PATH

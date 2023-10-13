@@ -3,28 +3,51 @@ version: "3.7"
 services:
   laravel:
     image: yaraku/assignment:$COMPOSE_PROJECT_NAME
-    container_name: $COMPOSE_PROJECT_NAME-laravel
+    container_name: laravel
     environment:
-      DB_DATABASE: laravel
-      DB_HOST: mysql
+      DB_DATABASE: project
+      DB_HOST: database
       DB_PASSWORD: secret
       DB_USERNAME: laravel
       APP_DEBUG: 'true'
       APP_ENV: local
       APP_KEY: ayGbuqVXJakHHvMTZCjKqzhVqMNsHMQs
-      LOG_CHANNEL: stderr
+      LOG_CHANNEL: stack
     ports:
-    - '80:80'
+      - '80:80'
     volumes:
-    - ./src:/var/www/html
+      - ./src:/var/www/html
 
-  mysql:
+  database:
     image: mysql:8
-    container_name: $COMPOSE_PROJECT_NAME-mysql
+    container_name: database
     ports:
-    - '3306:3306'
+      - '3306:3306'
     environment:
       MYSQL_USER: laravel
       MYSQL_PASSWORD: secret
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: project
+      MYSQL_ROOT_PASSWORD: root
+
+  laravel_testing:
+    image: yaraku/assignment:$COMPOSE_PROJECT_NAME
+    container_name: laravel_testing
+    environment:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      APP_ENV: testing
+      APP_DEBUG: 'true'
+      APP_KEY: knDDuRW1tXT0p2vXUIJCRbKMjUZ5
+      LOG_CHANNEL: stack
+    volumes:
+      - ./src:/var/www/html
+
+  npm:  
+      image: node:14
+      container_name: npm
+      working_dir: /var/www/html
+      volumes: 
+        - ./src:/var/www/html
+      stdin_open: true  # Keep STDIN open so the container doesn't exit
+      tty: true         # Allocate a pseudo-TTY
+      command: tail -f /dev/null  # Keep the container running

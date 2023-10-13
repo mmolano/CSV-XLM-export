@@ -1,5 +1,5 @@
 const mix = require('laravel-mix');
-
+const TerserPlugin = require('terser-webpack-plugin');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,5 +11,23 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.react('resources/js/app.js', 'public/js')
+   .sass('resources/sass/app.scss', 'public/css');
+
+if (mix.inProduction()) {
+   mix.options({
+      terser: {
+         terserOptions: {
+            mangle: true,
+            compress: {
+               drop_console: true,
+               drop_debugger: true
+            },
+            output: {
+               comments: false,
+               beautify: false
+            }
+         },
+      },
+   });
+}

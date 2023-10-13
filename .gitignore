@@ -5,3 +5,4 @@ docker-compose.override.yml
 Jenkinsfile*
 .env
 /clone*
+.phpunit.result.cache

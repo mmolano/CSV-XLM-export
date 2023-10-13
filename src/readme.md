@@ -1,72 +1,170 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# CSV/XML Laravel DOCKER
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+<table>
+<tr>
+<td>
+  This application is a CSV/XML extractor project using Laravel 6 and react 18. 
+  
+  It uses a bearer token to access the backend so be sure to incorporate the default token for testing purposes: "replaceWithRealToken". The token will be generated and accessible if the database is seeded. 
+</td>
+</tr>
+</table>
 
-## About Laravel
+## Built with
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- ![Laravel](https://img.shields.io/badge/laravel-16181D.svg?style=for-the-badge&logo=laravel&logoColor=#191A1A)
+- ![Reactjs](https://img.shields.io/badge/React.js-16181D.svg?style=for-the-badge&logo=react&logoColor=BDF0FD)
+- ![Docker](https://img.shields.io/badge/Docker-16181D.svg?style=for-the-badge&logo=docker&logoColor=BDF0FD)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Dependencies
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Bootstrap 4 : https://getbootstrap.com/docs/4.0/getting-started/introduction/
+- Axios: https://axios-http.com/docs/intro
+- react-toastify: https://fkhadra.github.io/react-toastify/introduction/
+- laravel-formatter: https://github.com/SoapBox/laravel-formatter
+- Cypress: https://www.cypress.io/
 
-## Learning Laravel
+## Pre-requiring
+- "php": "^7.2",
+- "node": "v20.3.1" -> working
+- "npm": "9.6.7" -> working
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Docker setup
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<h6 style="color:red">Note :</h6>
+<p>Make sure that there is no other container or service using the following ports: <b style="color: red">80</b>, <b style="color: red">3306</b>. Otherwise, you might need to change the ports in the .env file and the docker-compose file before executing the following commands : </p>
 
-## Laravel Sponsors
+```bash
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+# Must be in the root folder
+$ docker-compose up -d
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
+# Install the npm container (it might take some time)
+$ docker-compose exec npm npm install 
 
-## Contributing
+# Enter the container
+$ docker exec -it npm bash
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Setup npm in dev or production mode
+$ npm run dev | npm run prod
 
-## Security Vulnerabilities
+# Access the bash of the container (non-testing) - to leave type: "exit"
+$ docker exec -it laravel bash  
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Install dependencies
+$ composer install
 
-## License
+# Generate key
+$ php artisan key:generate
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Once inside the bash
+$ php artisan migrate
+# If an error is returned, the DB is not running yet, check status and try again
+# (check with docker ps)
+
+# Change this value in .env with your host (laravel folder). Must end with "/api"
+$ MIX_APP_URL=
+
+# If the DB is seeded, this token will work (default bearer token). Put it in .env
+$ MIX_APP_TOKEN="replaceWithRealToken"
+
+```
+
+<p>The app can be accessed through: <a href="http://localhost/">http://localhost/</a></p>
+<p style="color: #ffacac">Data can be seed with: </p>
+
+<table>
+<tr>
+<td>
+  php artisan db:seed
+</td>
+</tr>
+</table>
+
+<h6 style="color: red">Testing environment : </h6>
+<p>There is a clone of the laravel container named as: laravel_testing. Phpunit tests can be run safely on that container.</p>
+
+```bash
+# Same as before if the container is not running
+$ docker-compose up -d
+
+# Access the bash of the container (testing) - to leave type: "exit"
+$ docker exec -it laravel_testing bash
+
+# Make sure that the following values are the same in .env.testing
+$ APP_ENV=testing
+$ DB_CONNECTION=sqlite
+$ DB_DATABASE=:memory:
+
+# Start the tests
+$ ./vendor/bin/phpunit
+```
+
+## Non-docker setup
+
+<p>You must create a database and link it to the .env file</p>
+
+```bash
+# Get inside the correct folder
+$ cd /src
+
+# Get env file
+$ cp .env.example .env
+
+# Install dependencies
+$ composer install
+
+# Generate key
+$ php artisan key:generate
+
+# Once inside the bash
+$ php artisan migrate
+
+# Change this value in .env with your host (laravel folder). Must end with "/api"
+$ MIX_APP_URL=
+
+# If the DB is seeded, this token will work (default bearer token). Put it in .env
+$ MIX_APP_TOKEN="replaceWithRealToken"
+
+# Tests can be run the same way: 
+
+# Make sure that the following values are the same in .env.testing
+$ APP_ENV=testing
+$ DB_CONNECTION=sqlite
+$ DB_DATABASE=:memory:
+
+# Start the tests
+$ ./vendor/bin/phpunit
+
+```
+
+## Front setup
+
+<h6 style="color: red">Testing environment : </h6>
+
+```bash
+# Install dependencies
+$ npm i
+
+# Compile dev
+$ npm run dev
+
+# Hot reload dev
+$ npm run watch
+
+# Cypress tests
+$ npx cypress open
+```
+
+<h6 style="color: red">Production environment : </h6>
+
+```bash
+# Launch production mode
+$ npm run prod
+```
+## Cypress
+
+To target html elements with cypress create a "data-id" with a value that follows the following naming: "cy-name-you-want". <br>
+Example: &nbsp; `<input data-id="cy-title-name"/>`
+
+<p>Depending on the base url of your application you might have to change the env url inside the <b>cypress.env.json</b> -> "CYPRESS_TARGET_URL"</p>

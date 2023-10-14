@@ -36,8 +36,36 @@
 
 ```bash
 
-# Must be in the root folder
+# Must be in the root folder | create .env file
+$ cp .env.example .env
 $ docker-compose up -d
+
+# Access the bash of the container (non-testing) - to leave type: "exit"
+$ docker exec -it laravel bash  
+
+# Install dependencies
+$ composer install
+
+# Generate .env
+$ cp .env.example .env
+
+# Generate key
+$ php artisan key:generate
+
+# Once inside the bash
+$ php artisan migrate
+# If an error is returned, the DB is not running yet, check status and try again
+# (check with docker ps)
+
+# Seed the authorisation token
+$ php artisan db:seed --class=ConsumerSeeder
+
+# Change this value in .env with your host (laravel folder). Must end with "/api"
+$ MIX_APP_URL=
+
+# If the DB is seeded, this token will work (default bearer token). Put it in .env
+$ MIX_APP_TOKEN="replaceWithRealToken"
+
 
 # Install the npm container (it might take some time)
 $ docker-compose exec npm npm install 
@@ -48,30 +76,10 @@ $ docker exec -it npm bash
 # Setup npm in dev or production mode
 $ npm run dev | npm run prod
 
-# Access the bash of the container (non-testing) - to leave type: "exit"
-$ docker exec -it laravel bash  
-
-# Install dependencies
-$ composer install
-
-# Generate key
-$ php artisan key:generate
-
-# Once inside the bash
-$ php artisan migrate
-# If an error is returned, the DB is not running yet, check status and try again
-# (check with docker ps)
-
-# Change this value in .env with your host (laravel folder). Must end with "/api"
-$ MIX_APP_URL=
-
-# If the DB is seeded, this token will work (default bearer token). Put it in .env
-$ MIX_APP_TOKEN="replaceWithRealToken"
-
 ```
 
 <p>The app can be accessed through: <a href="http://localhost/">http://localhost/</a></p>
-<p style="color: #ffacac">Data can be seed with: </p>
+<p style="color: #ffacac">Data (book & consumer) can be seed with: </p>
 
 <table>
 <tr>

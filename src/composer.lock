@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40a999803259f91c21e4abaaf04d990b",
+    "content-hash": "d11910e4bc3bfdc2e48e48d75fb7de0e",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -6069,12 +6069,15 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "soapbox/laravel-formatter": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.2",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
